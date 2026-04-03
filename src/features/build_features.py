@@ -4,6 +4,25 @@ def load_data():
     df = preprocess_data()
     return df
 
+def create_temperature_bucket(df):
+    df = df.copy()
+    
+    def temp_bucket(temp):
+        if temp < 5:
+            return "very_cold"
+        elif temp < 15:
+            return "cold"
+        elif temp < 25:
+            return "mild"
+        elif temp < 35:
+            return "warm"
+        else:
+            return "hot"
+    
+    df["temp_category"] = df["Temperature"].apply(temp_bucket)
+    
+    return df
+
 def create_time_features(df):
     df = df.copy()
     
@@ -65,7 +84,8 @@ def build_features():
     df = create_rolling_features(df)
     df = create_promo_features(df)
     df = create_interactions(df)
-    
+    df = create_temperature_bucket(df)
+
     df = df.dropna()
     
     return df
