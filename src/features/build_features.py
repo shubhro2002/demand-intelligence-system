@@ -39,6 +39,8 @@ def create_lag_features(df):
     df = df.sort_values(["Store", "Date"])
     
     df["lag_1"] = df.groupby("Store")["Weekly_Sales"].shift(1)
+    df["lag_2"] = df.groupby("Store")["Weekly_Sales"].shift(2)
+    df["lag_3"] = df.groupby("Store")["Weekly_Sales"].shift(3)
     df["lag_7"] = df.groupby("Store")["Weekly_Sales"].shift(7)
     
     return df
@@ -66,6 +68,8 @@ def create_promo_features(df):
     df["total_markdown"] = df[markdown_cols].sum(axis=1)
     
     df["has_promo"] = (df["total_markdown"] > 0).astype(int)
+
+    df = df.drop(columns=markdown_cols)
     
     return df
 
