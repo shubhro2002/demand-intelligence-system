@@ -2,12 +2,41 @@ import pandas as pd
 import numpy as np
 import joblib
 
-from datetime import datetime
-
-# Load model
+# -------------------------------
+# Load Model
+# -------------------------------
 model = joblib.load("models/xgb_model_v7.pkl")
 
+# -------------------------------
+# Load History (Mini Feature Store)
+# -------------------------------
+history_df = pd.read_csv("data/processed/history.csv")
+history_df["Date"] = pd.to_datetime(history_df["Date"])
 
+
+# -------------------------------
+# Lag Retrieval Function
+# -------------------------------
+def get_lag_features(store, dept, date):
+    df = history_df.copy()
+    
+    df = df[
+        (df["Store"] == store) &
+        (df["Dept"] == dept) &
+        (df["Date"] < date)
+    ].sort_values("Date", ascending=False)
+    
+    # Handle edge cases
+    lag_1 = df.iloc[0]["Weekly_Sales"] if len(df) > 0 else 0
+    lag_2 = df.iloc[1]["Weekly_Sales"] if len(df) > 1 else lag_1
+    lag_3 = df.iloc[2]["Weekly_Sales"] if len(df) > 2 else lag_2
+    
+    return lag_1, lag_2, lag_3
+
+
+# -------------------------------
+# Preprocessing
+# -------------------------------
 def preprocess_input(data):
     df = pd.DataFrame([data])
     
@@ -43,10 +72,30 @@ def preprocess_input(data):
     return df
 
 
+# -------------------------------
+# Prediction Function
+# -------------------------------
 def predict(data: dict):
+    date = pd.to_datetime(data["Date"])
+    
+    # AUTO FETCH LAG FEATURES
+    lag_1, lag_2, lag_3 = get_lag_features(
+        data["Store"],
+        data["Dept"],
+        date
+    )
+    
+    # Inject into input
+    data["lag_1"] = lag_1
+    data["lag_2"] = lag_2
+    data["lag_3"] = lag_3
+    
+    # Debug
+    print(f"lags: {lag_1}, {lag_2}, {lag_3}")
+    
     df = preprocess_input(data)
     
-    # Align columns (IMPORTANT)
+    # Align with training features
     model_features = model.get_booster().feature_names
     df = df.reindex(columns=model_features, fill_value=0)
     
