@@ -1,4 +1,4 @@
-from src.data.preprocess import preprocess_data
+from src.data.preprocess import create_size_bucket, preprocess_data
 
 def load_data():
     df = preprocess_data()
