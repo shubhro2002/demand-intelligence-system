@@ -1,5 +1,4 @@
 import aiohttp
-from functools import lru_cache
 
 API_KEY = "1cbf752b50797f121c5b7f97f334e9cc"
 
