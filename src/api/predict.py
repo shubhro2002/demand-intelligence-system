@@ -1,6 +1,9 @@
 import pandas as pd
 import numpy as np
 import joblib
+import asyncio
+from src.data.fetch_weather import get_weather
+from src.config.store_locations import STORE_LOCATIONS
 
 # -------------------------------
 # Load Model
@@ -75,33 +78,39 @@ def preprocess_input(data):
 # -------------------------------
 # Prediction Function
 # -------------------------------
-def predict(data: dict):
+async def predict(data: dict):
     date = pd.to_datetime(data["Date"])
     
+    # -------------------------------
     # AUTO FETCH LAG FEATURES
+    # -------------------------------
     lag_1, lag_2, lag_3 = get_lag_features(
         data["Store"],
         data["Dept"],
         date
     )
     
-    # Inject into input
     data["lag_1"] = lag_1
     data["lag_2"] = lag_2
     data["lag_3"] = lag_3
     
-    # Debug
-    print(f"lags: {lag_1}, {lag_2}, {lag_3}")
+    # -------------------------------
+    # FETCH WEATHER (ASYNC)
+    # -------------------------------
+    location = STORE_LOCATIONS.get(data["Store"], STORE_LOCATIONS[1])
     
+    weather_data = await get_weather(location["lat"], location["lon"], str(date))
+    
+    data["Temperature"] = weather_data["Temperature"]    
+    # -------------------------------
+    # PREPROCESS + PREDICT
+    # -------------------------------
     df = preprocess_input(data)
     
-    # Align with training features
     model_features = model.get_booster().feature_names
     df = df.reindex(columns=model_features, fill_value=0)
     
     pred = model.predict(df)
-    
-    # Reverse log transform
     pred = np.expm1(pred)
     
     return float(pred[0])

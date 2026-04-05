@@ -6,8 +6,7 @@ class PredictionRequest(BaseModel):
     IsHoliday: int
     Size: float
     Type: str
-    
-    Temperature: float
+
     Fuel_Price: float
     CPI: float
     Unemployment: float

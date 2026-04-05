@@ -6,11 +6,11 @@ app = FastAPI()
 
 
 @app.get("/")
-def home():
+async def home():
     return {"message": "Demand Prediction API is running"}
 
 
 @app.post("/predict")
-def get_prediction(request: PredictionRequest):
-    result = predict(request.dict())
+async def get_prediction(request: PredictionRequest):
+    result = await predict(request.dict())
     return {"predicted_weekly_sales": result}
