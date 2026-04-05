@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 import joblib
-import asyncio
 from src.data.fetch_weather import get_weather
 from src.config.store_locations import STORE_LOCATIONS
 
