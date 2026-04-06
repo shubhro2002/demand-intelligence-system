@@ -3,16 +3,19 @@ import numpy as np
 import joblib
 from src.data.fetch_weather import get_weather
 from src.config.store_locations import STORE_LOCATIONS
+import os
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 # -------------------------------
 # Load Model
 # -------------------------------
-model = joblib.load("models/xgb_model_v7.pkl")
-
+model_path = os.path.join(BASE_DIR, "models", "xgb_model_v7.pkl")
+model = joblib.load(model_path)
 # -------------------------------
 # Load History (Mini Feature Store)
 # -------------------------------
-history_df = pd.read_csv("data/processed/history.csv")
+history_path = os.path.join(BASE_DIR, "data", "processed", "history.csv")
+history_df = pd.read_csv(history_path)
 history_df["Date"] = pd.to_datetime(history_df["Date"])
 
 

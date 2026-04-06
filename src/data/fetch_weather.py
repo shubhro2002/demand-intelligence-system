@@ -1,6 +1,11 @@
 import aiohttp
+import os
+from dotenv import load_dotenv
 
-API_KEY = "1cbf752b50797f121c5b7f97f334e9cc"
+load_dotenv()
+
+API_KEY = os.getenv("API_KEY")
+#print(API_KEY)
 
 # -------------------------------
 # Async Fetch Function
