@@ -164,3 +164,50 @@ https://demand-intelligence-system.onrender.com/
 Interactive API Docs:
 
 https://demand-intelligence-system.onrender.com/docs
+
+---
+
+## Model Performance
+
+| Metric | Value |
+| ------ | ----- |
+| MAE    | ~2457 |
+| RMSE   | ~5016 |
+
+---
+
+## Key Learnings
+
+- Designing stateful ML systems using feature stores
+- Handling training-serving skew
+- Implementing async pipelines in APIs
+- Managing external dependencies with caching
+- Deploying ML systems on cloud platforms
+
+---
+
+## Future Improvements
+- Replace CSV with real feature store (e.g., Feast)
+- Add real macroeconomic data APIs
+- Implement model monitoring
+- Dockerize for scalable deployment
+
+---
+
+## Tech Stack
+- Python
+- FastAPI
+- XGBoost
+- Pandas / NumPy
+- AsyncIO / aiohttp
+- Render (Deployment)
+
+---
+
+## Contributing
+
+Feel free to fork and improve the project!
+
+## If you found this useful
+
+Give it a star⭐!
