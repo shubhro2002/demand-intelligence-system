@@ -7,6 +7,7 @@ app = FastAPI()
 
 @app.get("/")
 async def home():
+    print("API started successfully")
     return {"message": "Demand Prediction API is running"}
 
 
