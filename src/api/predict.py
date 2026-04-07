@@ -10,7 +10,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 # Load Model
 # -------------------------------
 model_path = os.path.join(BASE_DIR, "models", "xgb_model_v7.pkl")
-model = joblib.load(model_path)
+try:
+    model = joblib.load(model_path)
+    print("Model loaded successfully")
+except Exception as e:
+    print("Model loading failed:", e)
 # -------------------------------
 # Load History (Mini Feature Store)
 # -------------------------------
