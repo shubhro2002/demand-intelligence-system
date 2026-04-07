@@ -81,3 +81,86 @@ Forecast **weekly sales for retail stores** based on:
 - Publicly accessible API endpoint
 
 ---
+## System Architecture
+Request → API (FastAPI)
+→ Lag Feature Retrieval (history.csv)
+→ Weather Fetch (Async API)
+→ Feature Engineering
+→ Model Prediction (XGBoost)
+→ Response
+
+---
+
+## Installation (Local Setup)
+
+```bash
+git clone https://github.com/shubhro2002/demand-intelligence-system.git
+cd demand-intelligence-system
+
+python -m venv venv
+venv\Scripts\activate  # Windows
+
+pip install -r requirements.txt
+```
+---
+
+### Environment Variables
+
+Create a `.env` file (for local use):
+
+```bash
+API_KEY=your_openweather_api_key
+```
+---
+
+### Run Locally
+
+```bash
+uvicorn src.api.main:app --reload
+```
+---
+
+### API Usage
+
+Open Swagger UI:
+```bash
+http://127.0.0.1:8000/docs
+```
+### Sample Input
+
+```bash
+{
+  "Store": 1,
+  "Dept": 1,
+  "IsHoliday": 0,
+  "Size": 150000,
+  "Type": "A",
+  "CPI": 220,
+  "Unemployment": 7.5,
+  "Fuel_Price": 3.5,
+  "MarkDown1": 0,
+  "MarkDown2": 0,
+  "MarkDown3": 0,
+  "MarkDown4": 0,
+  "MarkDown5": 0,
+  "Date": "2012-11-23"
+}
+```
+### Sample Output
+
+```bash
+{
+  "predicted_weekly_sales": 8113.30
+}
+```
+---
+
+## Deployment
+
+The application is deployed on Render:
+
+https://demand-intelligence-system.onrender.com/
+
+Interactive API Docs:
+
+https://demand-intelligence-system.onrender.com/docs
